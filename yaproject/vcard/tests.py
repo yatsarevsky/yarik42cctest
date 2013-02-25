@@ -1,5 +1,9 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
+from django.test.client import RequestFactory
+from django.template import RequestContext
+from django.conf import settings as django_settings
+from yaproject.vcard.context_processor import add_settings
 
 from yaproject.vcard.models import VCard, RequestStore
 
@@ -61,3 +65,13 @@ class RequestStoreTest(TestCase):
         self.assertEqual(self.req_store.host, 'testserver')
         self.assertEqual(self.req_store.path, '/request_store/')
         self.assertTrue(self.req_store.date)
+
+
+class ContextProcessorTest(TestCase):
+    def test_context_processor_with_settings(self):
+        link = reverse('home')
+        factory = RequestFactory()
+        request = factory.get(link)
+        c = RequestContext(request, {'foo': 'bar'}, [add_settings])
+        self.assertTrue('settings' in c)
+        self.assertEquals(c['settings'], django_settings)

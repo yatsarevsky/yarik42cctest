@@ -115,6 +115,7 @@ TEMPLATE_DIRS = (
 TEMPLATE_CONTEXT_PROCESSORS += (
     'django.core.context_processors.request',
     'django.core.context_processors.static',
+    'yaproject.vcard.context_processor.add_settings',
 )
 
 INSTALLED_APPS = (
