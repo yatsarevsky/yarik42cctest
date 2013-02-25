@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+
+{% block content %}
+<div class="up" >
+    <h1>42 Coffee Cups Test Assignment</h1>
+</div>
+<div class="authenticate">
+    {% if request.user.is_authenticated %}
+        <a href="{% url 'logout' %}" class="base"> Logout  </a>
+    {% else %}
+        <a href="{% url 'signup' %}" class="base">Sign Up </a>
+        <a href="{% url 'login' %}" class="base"> Login</a>
+    {% endif %}
+</div>
+<div class="container">
+<form action="/" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="center">
+        <div class="pull_left_form">
+            <strong id="name"> Name :</strong> {{ form.name }} <br />
+            {{form.name.errors}}
+            <strong id="surname"> Last name:</strong> {{ form.surname }}<br />
+            {{form.surname.errors}}
+            <strong>Date of birth:</strong> {{ form.birth_date }}<br />
+            {{ form.birth_date.errors }}
+            <h3><strong>Photo:</strong> {{ form.photo }}<br />
+        </div>
+        <div class="pull_right">
+            <h3>Contacts:</h3>
+            <strong>E-mail:</strong> {{ form.e_mail }}<br />
+            {{ form.e_mail.errors }}
+            <strong>Jabber:</strong> {{ form.jid }}<br />
+            {{ form.jid.errors }}
+            <strong> Skype :</strong> {{ form.skype }}<br />
+            {{ form.skype.errors }}
+            <h3><strong>Other contacts:</strong></h3>
+            <strong>Mob:</strong> {{ form.mob }}<br />
+            {{ form.mob.errors }}
+            <h3><strong>BIO:</strong></h3> {{ form.bio }}<br />
+        </div>
+    </div>
+    <div class="c_down">
+        <input type="submit" value="Save" />
+        <a href="{% url 'home' %}" class="base"> Cancel </a>
+    </div>
+    <div class="down">
+        <a href="{% url 'requests' %}" class="base"> Requests </a>
+    </div>
+</form>
+</div>
+{% endblock %}

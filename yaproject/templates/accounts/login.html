@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block content %}
+<table>
+    <form action="./" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <td>
+            <input type="submit" value="Login" />
+            <a href="{% url 'home' %}" class="base"> Cancel </a>
+        </td>
+    </form>
+</table>
+{% endblock %}

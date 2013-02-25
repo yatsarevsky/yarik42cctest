@@ -8,23 +8,74 @@ strong {
 
 .container {
     width: 960px;
+    height: 530px;
     clear: both;
     }
 
 .center {
     width: 960px;
-    height: 370px;
+    height: 530px;
+    }
+
+.up {
+    float: left;
+    width: 600px;
+    }
+
+img{
+    width: 220px;
+    height: 310px;
     }
 
 .pull_left {
     float: left;
+    width: 420px;
+    }
+
+.pull_left_form {
+    float: left;
+    width: 420px;
+    text-align: right;
     margin-top: 41px;
-    width: 470px;
+    }
+
+.center .pull_left{
+    margin-top: 41px;
     }
 
 .pull_right {
-    position: relative;
     float: right;
+    width: 470px;
+    }
+
+.pull_right h3 {
+    margin-top: 18px;
+    }
+
+.edit {
+    float: right;
+    width: 470px;
+    text-align: right;
+    }
+
+.authenticate {
+    text-align: right;
+    float: right;
+    width: 300px;
+    height: 23px;
+    margin-top: 27px;
+    margin-right: 45px;
+    }
+
+.c_down {
+    float: left;
+    margin-top: 10px;
+    width: 960px;
+    padding-bottom: 10px;
+    }
+
+#requests {
+    float: left;
     width: 470px;
     }
 
@@ -33,5 +84,9 @@ strong {
     width: 960px;
     height: 25px;
     border: 2px solid rgb(100, 100, 100);
-    border-width: 3px 0px 0px;
+    border-width: 3px 0 0;
+    }
+
+.errorlist {
+    color: red;
     }
