@@ -18,7 +18,7 @@ class VCard(models.Model):
     jid = models.CharField(max_length=64, verbose_name='JID')
 
     def __unicode__(self):
-        return '% %' % (self.name, self.surname)
+        return '%s %s' % (self.name, self.surname)
 
 
 class RequestStore(models.Model):
@@ -27,4 +27,4 @@ class RequestStore(models.Model):
     date = models.DateTimeField(default=datetime.now())
 
     def __unicode__(self):
-        return '% %' % (self.host, self.date)
+        return '%s %s' % (self.host, self.date)
