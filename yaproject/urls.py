@@ -11,6 +11,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', views.contacts, name='home'),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^request_store/$', views.requests_store, name='requests'),
 )
 
 if settings.DEBUG:

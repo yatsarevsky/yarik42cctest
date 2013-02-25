@@ -13,7 +13,7 @@ strong {
 
 .center {
     width: 960px;
-    height: 310px;
+    height: 370px;
     }
 
 .pull_left {
@@ -26,4 +26,12 @@ strong {
     position: relative;
     float: right;
     width: 470px;
+    }
+
+.down {
+    margin-top: 40px;
+    width: 960px;
+    height: 25px;
+    border: 2px solid rgb(100, 100, 100);
+    border-width: 3px 0px 0px;
     }

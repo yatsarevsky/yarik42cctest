@@ -1,0 +1,24 @@
+{%extends "base.html" %}
+
+{% block content %}
+<h1>Stored requests</h1>
+    <table>
+    <thead>
+        <tr>
+            <td>host</td>
+            <td>path</td>
+            <td>date</td>
+        </tr>
+    </thead>
+    <tbody>
+    {%for el in requests%}
+        <tr>
+            <td>{{el.host}}</td>
+            <td>{{el.path}}</td>
+            <td>{{el.date}}</td>
+        </tr>
+    </tbody>
+    {% endfor %}
+</table>
+</div>
+{% endblock %}
