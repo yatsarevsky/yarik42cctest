@@ -5,6 +5,11 @@ from django.forms.models import ModelForm
 from yaproject.vcard.models import VCard
 
 
+class CalendarWidget(forms.TextInput):
+    class Media:
+        js = ("js/dates.js",)
+
+
 class MemberAccountForm(ModelForm):
     email = forms.EmailField(widget=forms.TextInput(attrs={'maxlength': 75}),
         label=('Email address'))
@@ -48,3 +53,6 @@ class MemberAccountForm(ModelForm):
 class VCardForm(ModelForm):
     class Meta:
         model = VCard
+        widgets = {
+            'birth_date': CalendarWidget
+        }

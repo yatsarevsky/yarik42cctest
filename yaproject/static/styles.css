@@ -90,3 +90,13 @@ img{
 .errorlist {
     color: red;
     }
+
+.hide {
+    display: none;
+    }
+
+.loading_form input[type="text"],
+.loading_form input[type="file"],
+.loading_form textarea {
+    background: #ccc;
+    }
