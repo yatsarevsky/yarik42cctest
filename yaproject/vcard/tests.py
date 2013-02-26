@@ -8,7 +8,7 @@ from yaproject.vcard.context_processor import add_settings
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.urlresolvers import reverse
 
-from yaproject.vcard.models import VCard, RequestStore
+from yaproject.vcard.models import VCard, RequestStore, EntryLog
 from yaproject.vcard.forms import MemberAccountForm
 
 
@@ -225,3 +225,48 @@ class TemplateTagTest(BaseTest):
             self.render_template,
             '{% load edit_link %}{% get_edit_link my_vcard "some" %}',
             {})
+
+
+class EntryLogTest(BaseTest):
+    def setUp(self):
+        self.data = {
+            'name': 'test',
+            'surname': 'test',
+            'birth_date': '1980-10-10',
+            'bio': 'test test',
+            'e_mail': 'test@test.com',
+            'skype': 'test',
+            'mob': '1111111',
+            'jid': 'test'
+        }
+
+    def test_log_with_vcard_created(self):
+        VCard.objects.create(**self.data)
+        entry = EntryLog.objects.latest('id')
+        self.assertEquals(entry.get_action_display(), 'Created')
+
+    def test_log_with_vcard_changed(self):
+        self.client.login(username='admin', password='admin')
+        self.resp = self.client.post(reverse('edit_page'),
+            self.data, follow=True)
+        entry = EntryLog.objects.latest('id')
+        self.assertEquals(entry.get_action_display(), 'Changed')
+
+    def test_log_with_vcard_delete(self):
+        vcard = VCard.objects.create(**self.data)
+        vcard.delete()
+        entry = EntryLog.objects.latest('id')
+        self.assertEquals(entry.get_action_display(), 'Deleted')
+
+    def test_log_with_req_store_create(self):
+        self.client.post(reverse('home'), follow=True)
+        entry = EntryLog.objects.latest('id')
+        self.assertEquals(entry.get_action_display(), 'Created')
+        self.assertEquals(str(entry.content_type), 'request store')
+
+    def test_log_with_req_store_delete(self):
+        self.client.post(reverse('home'), follow=True)
+        req_store = RequestStore.objects.latest('id')
+        req_store.delete()
+        entry = EntryLog.objects.latest('id')
+        self.assertEquals(entry.get_action_display(), 'Deleted')

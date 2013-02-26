@@ -1,9 +1,11 @@
 from django.db import models
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
 
 from datetime import datetime
 
 
-__all__ = ['VCard', 'RequestStore']
+__all__ = ['VCard', 'RequestStore', 'EntryLog']
 
 
 class VCard(models.Model):
@@ -28,3 +30,19 @@ class RequestStore(models.Model):
 
     def __unicode__(self):
         return '%s %s' % (self.host, self.date)
+
+
+class EntryLog(models.Model):
+    ACTIONS = (
+        ('0', 'Changed'),
+        ('1', 'Created'),
+        ('2', 'Deleted'),
+    )
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.PositiveIntegerField()
+    content_object = generic.GenericForeignKey('content_type', 'object_id')
+    action = models.CharField(max_length=1, choices=ACTIONS)
+    date = models.DateTimeField(default=datetime.now())
+
+    def __unicode__(self):
+        return '%s %s' % (self.content_object, self.date)
