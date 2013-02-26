@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load url from future %}
+{% load edit_link %}
 
 {% block content %}
 <div class="up">
@@ -8,6 +9,7 @@
 <div class="authenticate">
     {% if request.user.is_authenticated %}
         <a href="{% url 'logout' %}" class="base"> Logout </a>
+         {% get_edit_link contacts %}
     {% else %}
         <a href="{% url 'sign-up' %}" class="base">Sign Up</a>
         <a href="{% url 'login' %}" class="base"> Login</a>
