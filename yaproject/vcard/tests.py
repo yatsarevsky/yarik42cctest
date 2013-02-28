@@ -166,7 +166,6 @@ class VcardViewsTest(BaseTest):
         self.json = json.dumps({'resource': self.data})
         self.resp = self.client.post(reverse('edit_page'),
             self.data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEqual(self.resp.content, '{"ok": true}')
         self.data['name'] = 'test2'
         self.resp = self.client.post(reverse('edit_page'),
             self.data, follow=True)
