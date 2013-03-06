@@ -50,13 +50,12 @@ class EntryLog(models.Model):
 
 
 def log(sender, **kwargs):
-    if sender._meta.object_name not in ('EntryLog', 'LogEntry'):
+    APP = ('vcard', 'auth', 'flatpages')
+    if sender._meta.app_label in APP and sender is not EntryLog:
         action = str(int(kwargs.get('created', '2')))
-        try:
-            EntryLog.objects.create(content_object=kwargs['instance'],
-                action=action)
-        except:
-            None
+
+        EntryLog.objects.create(content_object=kwargs['instance'],
+            action=action)
 
 post_save.connect(log)
 post_delete.connect(log)
