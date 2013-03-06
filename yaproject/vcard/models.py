@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.db.models.signals import post_save, post_delete
-from django.dispatch import receiver
 
 from datetime import datetime
 
@@ -50,27 +49,14 @@ class EntryLog(models.Model):
         return '%s %s' % (self.content_object, self.date)
 
 
-@receiver(post_save, sender=VCard)
-def vcard_post_save(sender, **kwargs):
-    if kwargs['created']:
-        action = '1'
-    else:
-        action = '0'
-    EntryLog.objects.create(content_object=kwargs['instance'], action=action)
+def log(sender, **kwargs):
+    if sender._meta.object_name not in ('EntryLog', 'LogEntry'):
+        action = str(int(kwargs.get('created', '2')))
+        try:
+            EntryLog.objects.create(content_object=kwargs['instance'],
+                action=action)
+        except:
+            None
 
-
-@receiver(post_delete, sender=VCard)
-def vcard_post_delete(sender, **kwargs):
-    EntryLog.objects.create(content_object=kwargs['instance'], action='2')
-
-
-@receiver(post_save, sender=RequestStore)
-def req_store_post_save(sender, **kwargs):
-    if kwargs['created']:
-        action = '1'
-    EntryLog.objects.create(content_object=kwargs['instance'], action=action)
-
-
-@receiver(post_delete, sender=RequestStore)
-def req_store_post_delete(sender, **kwargs):
-    EntryLog.objects.create(content_object=kwargs['instance'], action='2')
+post_save.connect(log)
+post_delete.connect(log)
