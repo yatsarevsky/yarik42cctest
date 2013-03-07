@@ -7,13 +7,10 @@ from django.contrib.auth.models import User
 from yaproject.vcard.context_processor import add_settings
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.urlresolvers import reverse
-from django.core.management import get_commands, call_command
-from StringIO import StringIO
+from django.core import management
 
 from yaproject.vcard.models import VCard, RequestStore, EntryLog
 from yaproject.vcard.forms import MemberAccountForm
-
-import sys
 
 
 class BaseTest(TestCase):
@@ -277,12 +274,5 @@ class EntryLogTest(BaseTest):
 
 class ShowModelsCommandTest(TestCase):
     def test_command_call(self):
-        import datetime
-        self.assertIn('show_models', str(get_commands()))
-        file_name = '%s.dat' % str(datetime.date.today())
-        f = open(file_name, 'w+')
-        call_command('show_models')
-        out = '%s(%d) ' % ('RequestStore',
-            RequestStore.objects.all().count())
-        self.assertIn(out, f.read())
-        f.close()
+        self.assertIn('show_models',
+            str(management.get_commands()))
