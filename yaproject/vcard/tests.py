@@ -7,6 +7,10 @@ from django.contrib.auth.models import User
 from yaproject.vcard.context_processor import add_settings
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.urlresolvers import reverse
+from django.core import management
+from cStringIO import StringIO
+
+import sys
 
 from yaproject.vcard.models import VCard, RequestStore, EntryLog
 from yaproject.vcard.forms import MemberAccountForm
@@ -269,3 +273,25 @@ class EntryLogTest(BaseTest):
         req_store.delete()
         entry = EntryLog.objects.latest('id')
         self.assertEquals(entry.get_action_display(), 'Deleted')
+
+
+class ShowModelsCommandTest(TestCase):
+    def out(self, model):
+        cnt = model.objects.count()
+        out = '[error]%s(%d)' % (model.__name__, cnt)
+        return out
+
+    def call(self):
+        orig_stdout = sys.stderr
+        sys.stderr = content = StringIO()
+        management.call_command('show_models', db_dry_run=True)
+        sys.stdout = orig_stdout
+        content.seek(0)
+        return content.read()
+
+    def test_command_call(self):
+        self.assertIn('show_models',
+            str(management.get_commands()))
+        self.assertIn(self.out(VCard), self.call())
+        self.assertIn(self.out(RequestStore), self.call())
+        self.assertIn(self.out(EntryLog), self.call())
