@@ -28,9 +28,10 @@ class RequestStore(models.Model):
     host = models.CharField(max_length=255)
     path = models.CharField(max_length=255)
     date = models.DateTimeField(default=datetime.now())
+    priority = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return '%s %s' % (self.host, self.date)
+        return '%s %s %s' % (self.host, self.date, self.priority)
 
 
 class EntryLog(models.Model):
