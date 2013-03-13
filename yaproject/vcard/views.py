@@ -2,9 +2,11 @@ from django.shortcuts import render_to_response, redirect
 from django.template.context import RequestContext
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+#from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from yaproject.vcard.models import VCard, RequestStore
-from yaproject.vcard.forms import MemberAccountForm, VCardForm
+from yaproject.vcard.forms import (MemberAccountForm, VCardForm,
+                                   RequestStoreFormSet)
 
 
 def contacts(request):
@@ -14,9 +16,19 @@ def contacts(request):
 
 
 def requests_store(request):
-    requests = RequestStore.objects.all().order_by('id')[:10]
+    requests = RequestStore.objects.all()
+    formset = RequestStoreFormSet(queryset=requests)
+
+    if request.POST:
+        formset = RequestStoreFormSet(request.POST)
+
+    if formset.is_valid():
+        formset.save()
+        return redirect('requests')
+
     return render_to_response('requests.html',
-        {'requests': requests}, RequestContext(request))
+        {'requests': requests, 'formset': formset},
+        RequestContext(request))
 
 
 @login_required(login_url='/login/')

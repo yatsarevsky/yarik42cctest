@@ -30,8 +30,11 @@ class RequestStore(models.Model):
     date = models.DateTimeField(default=datetime.now())
     priority = models.BooleanField(default=False)
 
+    class Meta:
+            ordering = ['-priority']
+
     def __unicode__(self):
-        return '%s %s %s' % (self.host, self.date, self.priority)
+        return '%s %s %s' % (self.host, self.date)
 
 
 class EntryLog(models.Model):

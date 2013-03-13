@@ -2,23 +2,36 @@
 
 {% block content %}
 <h1>Stored requests</h1>
+<form method="post" action="./">
+    {% csrf_token %}
     <table>
-    <thead>
-        <tr>
-            <td>host</td>
-            <td>path</td>
-            <td>date</td>
-        </tr>
-    </thead>
-    <tbody>
-    {%for el in requests%}
-        <tr>
-            <td>{{el.host}}</td>
-            <td>{{el.path}}</td>
-            <td>{{el.date}}</td>
-        </tr>
-    </tbody>
-    {% endfor %}
-</table>
-</div>
+        <thead>
+            <tr>
+                <td>Host</td>
+                <td>Path</td>
+                <td>Date</td>
+                <td>Is priority?</td>
+            </tr>
+        </thead>
+        <tbody>
+            {{ formset.management_form }}
+            {% for form in formset %}
+                {{ form.id }}
+                <tr>
+                    <td>{{ form.instance.host }}</td>
+                    <td>{{ form.instance.path }}</td>
+                    <td>{{ form.instance.date }}</td>
+                    <td>{{ form.priority }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4">
+                    <button type="submit">Save</button>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</form>
 {% endblock %}

@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.forms.models import ModelForm
+from django.forms.models import modelformset_factory
 
-from yaproject.vcard.models import VCard
+from yaproject.vcard.models import VCard, RequestStore
 
 
 class CalendarWidget(forms.TextInput):
@@ -56,3 +57,6 @@ class VCardForm(ModelForm):
         widgets = {
             'birth_date': CalendarWidget
         }
+
+
+RequestStoreFormSet = modelformset_factory(RequestStore, fields=('priority',))
