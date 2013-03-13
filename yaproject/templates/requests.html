@@ -34,4 +34,7 @@
         </tfoot>
     </table>
 </form>
+{% for page in paginator.page_range %}
+    <a href="./?page={{ page }}">{{ page }}</a>
+{% endfor %}
 {% endblock %}

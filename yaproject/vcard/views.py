@@ -2,7 +2,7 @@ from django.shortcuts import render_to_response, redirect
 from django.template.context import RequestContext
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-#from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator
 
 from yaproject.vcard.models import VCard, RequestStore
 from yaproject.vcard.forms import (MemberAccountForm, VCardForm,
@@ -16,18 +16,29 @@ def contacts(request):
 
 
 def requests_store(request):
-    requests = RequestStore.objects.all()
-    formset = RequestStoreFormSet(queryset=requests)
+    requests = RequestStore.objects.get_query_set()
+    paginator = Paginator(requests, 30)
+    page = request.GET.get('page', 1)
+
+    try:
+        objects = paginator.page(page)
+    except:
+        objects = paginator.page(paginator.num_pages)
+
+    queryset = RequestStore.objects.filter(
+        id__in=[object.id for object in objects]
+        )
+    formset = RequestStoreFormSet(queryset=queryset)
 
     if request.POST:
         formset = RequestStoreFormSet(request.POST)
 
-    if formset.is_valid():
-        formset.save()
-        return redirect('requests')
+        if formset.is_valid():
+            formset.save()
+            return redirect('requests')
 
     return render_to_response('requests.html',
-        {'requests': requests, 'formset': formset},
+        {'requests': requests, 'formset': formset, 'paginator': paginator},
         RequestContext(request))
 
 
