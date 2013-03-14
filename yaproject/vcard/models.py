@@ -28,13 +28,13 @@ class RequestStore(models.Model):
     host = models.CharField(max_length=255)
     path = models.CharField(max_length=255)
     date = models.DateTimeField(default=datetime.now())
-    priority = models.BooleanField(default=False)
+    priority = models.PositiveIntegerField(default=0)
 
     class Meta:
             ordering = ['-priority']
 
     def __unicode__(self):
-        return '%s %s %s' % (self.host, self.date)
+        return '%s %s' % (self.host, self.date)
 
 
 class EntryLog(models.Model):

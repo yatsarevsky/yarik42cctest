@@ -16,7 +16,8 @@ def contacts(request):
 
 
 def requests_store(request):
-    requests = RequestStore.objects.get_query_set()
+    o = request.GET.get('o', '-priority')
+    requests = RequestStore.objects.get_query_set().order_by(o)
     paginator = Paginator(requests, 30)
     page = request.GET.get('page', 1)
 

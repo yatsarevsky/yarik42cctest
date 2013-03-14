@@ -1,4 +1,5 @@
 {%extends "base.html" %}
+{% load url from future %}
 
 {% block content %}
 <h1>Stored requests</h1>
@@ -10,7 +11,12 @@
                 <td>Host</td>
                 <td>Path</td>
                 <td>Date</td>
-                <td>Is priority?</td>
+
+                <td>
+                    <a href={% if request.GET.o == '-priority' %}
+                    "./?o=priority"{% else %}"./?o=-priority"{% endif %}>
+                    Is priority</a>
+                </td>
             </tr>
         </thead>
         <tbody>

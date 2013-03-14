@@ -185,9 +185,11 @@ class RequestStoreTest(TestCase):
             self.resp = self.client.get(link)
         self.resp = self.client.get('/request_store/')
         self.assertEqual(self.resp.status_code, 200)
-        self.assertEqual(len(self.resp.context['requests']), 10)
+        self.assertEqual(len(self.resp.context['requests']), 11)
         self.req_store = RequestStore.objects.latest('id')
-        self.assertNotIn(self.req_store, self.resp.context['requests'])
+        self.assertEqual(self.req_store, self.resp.context['requests'][10])
+        self.form = self.resp.context['formset'][10]
+        self.assertEqual(self.form.initial['priority'], 0)
         self.assertTrue(self.req_store)
         self.assertEqual(self.req_store.host, 'testserver')
         self.assertEqual(self.req_store.path, '/request_store/')
