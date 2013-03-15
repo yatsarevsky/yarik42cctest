@@ -13,7 +13,7 @@ from cStringIO import StringIO
 import sys
 
 from yaproject.vcard.models import VCard, RequestStore, EntryLog
-from yaproject.vcard.forms import MemberAccountForm
+from yaproject.vcard.forms import MemberAccountForm, RequestStoreFormSet
 
 
 class BaseTest(TestCase):

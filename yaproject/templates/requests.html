@@ -14,7 +14,9 @@
 
                 <td>
                     <a href={% if request.GET.o == '-priority' %}
-                    "./?o=priority"{% else %}"./?o=-priority"{% endif %}>
+                    "./?page={{ page }}&o=priority"
+                    {% else %}
+                    "./?page={{ page }}&o=-priority"{% endif %}>
                     Is priority</a>
                 </td>
             </tr>
@@ -41,6 +43,9 @@
     </table>
 </form>
 {% for page in paginator.page_range %}
-    <a href="./?page={{ page }}">{{ page }}</a>
+    <a href=
+    "./?page={{ page }}{% if request.GET.o %}&o={{ request.GET.o }}{% endif %}">
+    {{ page }}
+    </a>
 {% endfor %}
 {% endblock %}

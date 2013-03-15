@@ -17,7 +17,7 @@ def contacts(request):
 
 def requests_store(request):
     o = request.GET.get('o', '-priority')
-    requests = RequestStore.objects.get_query_set().order_by(o)
+    requests = RequestStore.objects.get_query_set()
     paginator = Paginator(requests, 30)
     page = request.GET.get('page', 1)
 
@@ -28,7 +28,7 @@ def requests_store(request):
 
     queryset = RequestStore.objects.filter(
         id__in=[object.id for object in objects]
-        )
+        ).order_by(o)
     formset = RequestStoreFormSet(queryset=queryset)
 
     if request.POST:
@@ -39,7 +39,8 @@ def requests_store(request):
             return redirect('requests')
 
     return render_to_response('requests.html',
-        {'requests': requests, 'formset': formset, 'paginator': paginator},
+        {'requests': requests, 'formset': formset,
+            'page': page, 'paginator': paginator},
         RequestContext(request))
 
 
