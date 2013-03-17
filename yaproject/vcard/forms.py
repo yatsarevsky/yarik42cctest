@@ -59,4 +59,5 @@ class VCardForm(ModelForm):
         }
 
 
-RequestStoreFormSet = modelformset_factory(RequestStore, fields=('priority',))
+RequestStoreFormSet = modelformset_factory(RequestStore,
+    fields=('priority',), extra=0)

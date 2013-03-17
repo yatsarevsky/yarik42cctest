@@ -17,7 +17,8 @@ def contacts(request):
 
 def requests_store(request):
     o = request.GET.get('o', '-priority')
-    requests = RequestStore.objects.get_query_set()
+    requests = RequestStore.objects.order_by(o)
+
     paginator = Paginator(requests, 30)
     page = request.GET.get('page', 1)
 
@@ -26,10 +27,7 @@ def requests_store(request):
     except:
         objects = paginator.page(paginator.num_pages)
 
-    queryset = RequestStore.objects.filter(
-        id__in=[object.id for object in objects]
-        ).order_by(o)
-    formset = RequestStoreFormSet(queryset=queryset)
+    formset = RequestStoreFormSet(queryset=objects.object_list)
 
     if request.POST:
         formset = RequestStoreFormSet(request.POST)

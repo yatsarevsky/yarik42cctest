@@ -13,10 +13,10 @@
                 <td>Date</td>
 
                 <td>
-                    <a href={% if request.GET.o == '-priority' %}
-                    "./?page={{ page }}&o=priority"
+                    <a href={% if request.GET.o == 'priority' %}
+                    "./?page={{ page }}&o=-priority"
                     {% else %}
-                    "./?page={{ page }}&o=-priority"{% endif %}>
+                    "./?page={{ page }}&o=priority"{% endif %}>
                     Is priority</a>
                 </td>
             </tr>

@@ -13,7 +13,7 @@ from cStringIO import StringIO
 import sys
 
 from yaproject.vcard.models import VCard, RequestStore, EntryLog
-from yaproject.vcard.forms import MemberAccountForm, RequestStoreFormSet
+from yaproject.vcard.forms import MemberAccountForm
 
 
 class BaseTest(TestCase):
@@ -179,21 +179,62 @@ class VcardViewsTest(BaseTest):
 
 
 class RequestStoreTest(TestCase):
+    def _make_requests(self, cnt, url='/'):
+        while RequestStore.objects.all().count() != cnt:
+            self.client.get(url)
+
+    def _create_objects(self, cnt):
+        for i in range(0, cnt):
+            RequestStore.objects.create(host='testserver', path='/', priority=i)
+
     def test_middleware_with_store(self):
         link = reverse('home')
-        while RequestStore.objects.all().count() != 10:
-            self.resp = self.client.get(link)
+        self._make_requests(10, link)
         self.resp = self.client.get('/request_store/')
         self.assertEqual(self.resp.status_code, 200)
-        self.assertEqual(len(self.resp.context['requests']), 11)
+        self.assertEqual(len(self.resp.context['requests']), 10)
         self.req_store = RequestStore.objects.latest('id')
-        self.assertEqual(self.req_store, self.resp.context['requests'][10])
-        self.form = self.resp.context['formset'][10]
+        self.assertEqual(self.req_store, self.resp.context['requests'][9])
+        self.form = self.resp.context['formset'][9]
         self.assertEqual(self.form.initial['priority'], 0)
         self.assertTrue(self.req_store)
         self.assertEqual(self.req_store.host, 'testserver')
-        self.assertEqual(self.req_store.path, '/request_store/')
+        self.assertEqual(self.req_store.path, link)
         self.assertTrue(self.req_store.date)
+
+    def test_pagination(self):
+        self._make_requests(80)
+        self.resp = self.client.get('/request_store/', data={'page': '1'})
+        self.assertEqual(self.resp.status_code, 200)
+        self.assertEqual(len(self.resp.context['formset'].forms), 30)
+        self.resp = self.client.get('/request_store/', data={'page': '3'})
+        self.assertEqual(len(self.resp.context['formset'].forms), 20)
+        self.resp = self.client.get('/request_store/', data={'page': '345'})
+        self.assertEqual(len(self.resp.context['formset'].forms), 20)
+
+    def test_priority_save(self):
+        self._create_objects(1)
+        post_data = {
+            'form-TOTAL_FORMS': u'1',
+            'form-INITIAL_FORMS': u'0',
+            'form-MAX_NUM_FORMS': u'',
+            'form-0-priority': u'45'
+        }
+        self.resp = self.client.post('/request_store/',
+            data=post_data, follow=True)
+        self.assertIn('http://testserver/request_store/',
+            dict(self.resp.redirect_chain))
+        self.resp = self.client.get('/request_store/')
+        self.assertEqual(self.resp.context['requests'][0].priority, 45)
+
+    def test_priority_sorting(self):
+        self._create_objects(80)
+        self.resp = self.client.get('/request_store/')
+        self.assertEqual(self.resp.context['requests'][0].priority, 79)
+        self.resp = self.client.get('/request_store/', data={'o': 'priority'})
+        self.assertEqual(self.resp.context['requests'][0].priority, 0)
+        self.resp = self.client.get('/request_store/', data={'o': '-priority'})
+        self.assertEqual(self.resp.context['requests'][0].priority, 79)
 
 
 class ContextProcessorTest(TestCase):

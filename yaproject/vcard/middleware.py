@@ -6,5 +6,6 @@ class RequestStoreWare:
         r = RequestStore()
         r.host = request.get_host()
         r.path = request.get_full_path()
-        r.save()
+        if '/request_store/' not in r.path:
+            r.save()
         return None
